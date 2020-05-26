@@ -38,11 +38,11 @@ function init() {
     canvas.height = Math.round(work_area.height * 0.30) - 60;
 
     win.setResizable(false);
-    draw_grid();
+    drawGrid();
     assignPageEvtListeners();
 }
 
-function draw_grid() {
+function drawGrid() {
     const text_height = 80;
     const text_width = 40;
     
@@ -95,6 +95,14 @@ function assignPageEvtListeners() {
             mouse.left = false;
         }
     });
+
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    document.getElementById('clear-button').addEventListener('click', function() {
+        drawGrid();
+    })
 }
 
 function pointInRect(point, rect) {
@@ -102,3 +110,18 @@ function pointInRect(point, rect) {
     && point.y < rect.bottom_y && point.y > rect.top_y;
 }
 init();
+
+function addText(str) {
+    textContainer = document.getElementById('main-text');
+    for (const c of str) {
+        let item = document.createElement('div');
+        item.classList.add('predicted-char');
+        item.innerHTML = c;
+        textContainer.appendChild(item);
+    }
+}
+
+function clearText() {
+    textContainer = document.getElementById('main-text');
+    textContainer.innerHTML = '';
+}
