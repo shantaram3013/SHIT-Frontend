@@ -1,0 +1,13 @@
+canvas {
+    width: calc(100% - 40px);
+    height: 100%;
+    border: 2px solid red;
+}
+
+body {
+    background: rgba(48, 48, 48, 0.4);
+}
+
+.button-container {
+    float: right;
+}

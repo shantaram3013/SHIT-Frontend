@@ -1,4 +1,9 @@
 {
-  "name": "helloworld",
-  "main": "main.js" 
+    "name": "shit_frontend",
+    "main": "index.html",
+    "window": {
+        "frame": false,
+        "transparent": true
+    },
+    "chromium-args": "--enable-logging=stderr"
 }
