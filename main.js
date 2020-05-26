@@ -52,8 +52,9 @@ function drawGrid() {
     const end_x = canvas.width - start_x;
     const lower_y = ((canvas.height - text_height) / 2) + text_height;
     const upper_y = lower_y - text_height;
+    const bar_height = 10;
 
-    ctx.strokeStyle = 'rgba(200, 200, 200, 0.6)';
+    ctx.strokeStyle = 'rgba(200, 200, 200, 0.9)';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.beginPath();
@@ -66,7 +67,7 @@ function drawGrid() {
 
     for (let x = start_x + 0.5; x <= end_x + text_width; x += text_width) {
         ctx.moveTo(x, lower_y);
-        ctx.lineTo(x, lower_y - text_height);
+        ctx.lineTo(x, lower_y - bar_height);
     }
 
     drawing_area_bounds = {
@@ -81,14 +82,19 @@ function assignPageEvtListeners() {
         mouse.x = e.pageX - this.offsetLeft;
         mouse.y = e.pageY - this.offsetTop;
         if (mouse.left) {
-            if (pointInRect(mouse, drawing_area_bounds))
-                drawPixel(mouse.x, mouse.y);
+            if (pointInRect(mouse, drawing_area_bounds)) {
+                ctx.lineWidth = 2;
+                ctx.lineTo(mouse.x, mouse.y);                
+                ctx.stroke();
+            }
         }
     }, false);
 
     canvas.addEventListener('mousedown', function (e) {
-        if (e.which === 1) {
+        if (e.which === 1 && pointInRect(mouse, drawing_area_bounds)) {
             mouse.left = true;
+            ctx.beginPath();
+            ctx.moveTo(mouse.x, mouse.y);
         }
     });
 
