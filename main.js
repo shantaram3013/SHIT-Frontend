@@ -39,6 +39,8 @@ function init() {
 
     win.setResizable(false);
     drawGrid();
+    clearText();
+    addText('placeholder text');
     assignPageEvtListeners();
 }
 
@@ -109,14 +111,18 @@ function pointInRect(point, rect) {
     return point.x < rect.right_x && point.x > rect.left_x
     && point.y < rect.bottom_y && point.y > rect.top_y;
 }
-init();
 
 function addText(str) {
     textContainer = document.getElementById('main-text');
     for (const c of str) {
-        let item = document.createElement('div');
+        let item = document.createElement('pre');
         item.classList.add('predicted-char');
-        item.innerHTML = c;
+        if (!(c === ' ')) {
+            item.innerHTML = c;
+        }
+        else {
+            item.innerHTML = '  ';
+        }
         textContainer.appendChild(item);
     }
 }
@@ -125,3 +131,5 @@ function clearText() {
     textContainer = document.getElementById('main-text');
     textContainer.innerHTML = '';
 }
+
+init();
