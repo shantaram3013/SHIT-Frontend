@@ -113,3 +113,4 @@ class Circle {
 function clearChildren(id) {
     document.getElementById(id).innerHTML = "";
 }
+

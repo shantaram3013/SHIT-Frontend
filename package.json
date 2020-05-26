@@ -1,10 +1,11 @@
 {
     "name": "shit_frontend",
     "main": "index.html",
+    "chromium-args": "--enable-logging=stderr",
+    "dependencies": {},
     "window": {
         "frame": false,
-        "transparent": true
-    },
-    "chromium-args": "--enable-logging=stderr",
-    "dependencies": {}
+        "transparent": true,
+        "resizable": false
+    }
 }
