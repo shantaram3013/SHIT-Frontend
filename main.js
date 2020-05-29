@@ -16,15 +16,15 @@ let points = [];
 const canvas_alpha = 1;
 const grey_hue = 255;
 
-function drawPixel (x, y) {
-/*     canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    var index = (x + y * canvas.width) * 4;
-
-    canvasData.data[index + 0] = grey_hue;
-    canvasData.data[index + 1] = grey_hue;
-    canvasData.data[index + 2] = grey_hue;
-    canvasData.data[index + 3] = canvas_alpha;
-    ctx.putImageData(canvasData, 0, 0); */
+function drawPixel(x, y) {
+    /*     canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var index = (x + y * canvas.width) * 4;
+    
+        canvasData.data[index + 0] = grey_hue;
+        canvasData.data[index + 1] = grey_hue;
+        canvasData.data[index + 2] = grey_hue;
+        canvasData.data[index + 3] = canvas_alpha;
+        ctx.putImageData(canvasData, 0, 0); */
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(x, y, 1, 1);
 }
@@ -53,7 +53,7 @@ function init() {
 function drawGrid() {
     const text_height = 80;
     const text_width = 40;
-    
+
     const start_x = (canvas.width % text_width) / 2;
     const end_x = canvas.width - start_x;
     const lower_y = ((canvas.height - text_height) / 2) + text_height;
@@ -90,7 +90,7 @@ function assignPageEvtListeners() {
         if (mouse.left) {
             if (pointInRect(mouse, drawing_area_bounds)) {
                 ctx.lineWidth = 2;
-                ctx.lineTo(mouse.x, mouse.y);                
+                ctx.lineTo(mouse.x, mouse.y);
                 ctx.stroke();
             }
         }
@@ -112,19 +112,28 @@ function assignPageEvtListeners() {
 
     canvas.addEventListener('touchmove', function (e) {
 
+        if (e.target == canvas) {
+            e.preventDefault();
+        }
+
         var touch = e.touches[0];
         finger.x = touch.pageX - this.offsetLeft;
         finger.y = touch.pageY - this.offsetTop;
         if (finger.down) {
             if (pointInRect(finger, drawing_area_bounds)) {
                 ctx.lineWidth = 2;
-                ctx.lineTo(finger.x, finger.y);                
+                ctx.lineTo(finger.x, finger.y);
                 ctx.stroke();
             }
         }
     }, false);
 
     canvas.addEventListener('touchstart', function (e) {
+
+        if (e.target == canvas) {
+            e.preventDefault();
+        }
+
         if (pointInRect(finger, drawing_area_bounds)) {
             finger.down = true;
             ctx.beginPath();
@@ -133,21 +142,24 @@ function assignPageEvtListeners() {
     });
 
     canvas.addEventListener('touchend', function (e) {
-            finger.down = false;
+        if (e.target == canvas) {
+            e.preventDefault();
+        }
+        finger.down = false;
     });
 
-    document.addEventListener('contextmenu', function(e) {
+    document.addEventListener('contextmenu', function (e) {
         e.preventDefault();
     });
 
-    document.getElementById('clear-button').addEventListener('click', function() {
+    document.getElementById('clear-button').addEventListener('click', function () {
         drawGrid();
     })
 }
 
 function pointInRect(point, rect) {
     return point.x < rect.right_x && point.x > rect.left_x
-    && point.y < rect.bottom_y && point.y > rect.top_y;
+        && point.y < rect.bottom_y && point.y > rect.top_y;
 }
 
 function addText(str) {
