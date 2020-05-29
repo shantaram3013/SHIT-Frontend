@@ -11,20 +11,19 @@ let finger = {
     y: 0,
     down: false
 }
+
+let lastPos = {
+    x: 0,
+    y: 0,
+    down: false
+}
+
 let drawing_area_bounds;
 let points = [];
 const canvas_alpha = 1;
 const grey_hue = 255;
 
 function drawPixel(x, y) {
-    /*     canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        var index = (x + y * canvas.width) * 4;
-    
-        canvasData.data[index + 0] = grey_hue;
-        canvasData.data[index + 1] = grey_hue;
-        canvasData.data[index + 2] = grey_hue;
-        canvasData.data[index + 3] = canvas_alpha;
-        ctx.putImageData(canvasData, 0, 0); */
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(x, y, 1, 1);
 }
@@ -119,16 +118,18 @@ function assignPageEvtListeners() {
         var touch = e.touches[0];
         finger.x = touch.pageX - this.offsetLeft;
         finger.y = touch.pageY - this.offsetTop;
-        if (finger.down) {
             if (pointInRect(finger, drawing_area_bounds)) {
                 ctx.lineWidth = 2;
+                ctx.moveTo(lastPos.x, lastPos.y);
                 ctx.lineTo(finger.x, finger.y);
                 ctx.stroke();
-            }
+                lastPos = {
+                    x: finger.x, y: finger.y
+                }
         }
     }, false);
 
-    canvas.addEventListener('touchstart', function (e) {
+/*     canvas.addEventListener('touchstart', function (e) {
 
         if (e.target == canvas) {
             e.preventDefault();
@@ -147,7 +148,7 @@ function assignPageEvtListeners() {
         }
         finger.down = false;
     });
-
+ */
     document.addEventListener('contextmenu', function (e) {
         e.preventDefault();
     });
@@ -183,3 +184,53 @@ function clearText() {
 }
 
 init();
+
+class RingBuffer {
+    constructor(length) {
+        this.arr = {};
+        this.length = length;
+
+        for(let x = 0; x < this.length; x++) {
+            this.arr[x] = null;
+        }
+    }
+
+
+    pushAtIndex (item, index) {
+        this.arr[this.transformIndex(index)] = item;
+    }
+
+    transformIndex(index) {
+        let finalIndex = index;
+        if (index > this.length - 1) {
+            finalIndex = index % this.length;
+        }
+        return finalIndex;
+    }
+
+    remove(args) {
+        if (args.elem) {
+            for (let x of this.arr) {
+                if (x === args.elem) {
+                    this.remove({index: this.arr.indexOf(args.elem)});
+                    return 0;
+                }
+            }
+        }
+
+        else if (args.index) {
+            this.arr[this.transformIndex(args.index)] = null;
+            return 0;
+        }
+
+        return -1;
+    }
+}
+
+Array.prototype.remove = function (v) {
+    if (this.indexOf(v) != -1) {
+        this.splice(this.indexOf(v), 1);
+        return true;
+    }
+    return false;
+}
