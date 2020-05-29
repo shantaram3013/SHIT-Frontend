@@ -5,6 +5,12 @@ let mouse = {
     left: false,
     right: false
 }
+
+let finger = {
+    x: 0,
+    y: 0,
+    down: false
+}
 let drawing_area_bounds;
 let points = [];
 const canvas_alpha = 1;
@@ -102,6 +108,32 @@ function assignPageEvtListeners() {
         if (e.which === 1) {
             mouse.left = false;
         }
+    });
+
+    canvas.addEventListener('touchmove', function (e) {
+
+        var touch = e.touches[0];
+        finger.x = touch.pageX - this.offsetLeft;
+        finger.y = touch.pageY - this.offsetTop;
+        if (finger.down) {
+            if (pointInRect(finger, drawing_area_bounds)) {
+                ctx.lineWidth = 2;
+                ctx.lineTo(finger.x, finger.y);                
+                ctx.stroke();
+            }
+        }
+    }, false);
+
+    canvas.addEventListener('touchstart', function (e) {
+        if (pointInRect(finger, drawing_area_bounds)) {
+            finger.down = true;
+            ctx.beginPath();
+            ctx.moveTo(finger.x, finger.y);
+        }
+    });
+
+    canvas.addEventListener('touchend', function (e) {
+            finger.down = false;
     });
 
     document.addEventListener('contextmenu', function(e) {
