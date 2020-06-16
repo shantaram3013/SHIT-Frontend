@@ -26,7 +26,7 @@ function clamp(value, min, max) {
     return value;
 }
 
-function line(context, v1, v2, width) {
+function line(v1, v2, width) {
     context.beginPath();
     if (color)
         context.strokeStyle = color;
