@@ -16,11 +16,7 @@ let drawing_area_bounds;
 let points = [];
 const canvas_alpha = 1;
 const grey_hue = 255;
-
-function drawPixel(x, y) {
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(x, y, 3, 3);
-}
+const eraserSize = 5;
 
 function init() {
     nw.Screen.Init();
@@ -80,9 +76,13 @@ function assignPageEvtListeners() {
         canvas.addEventListener('mousemove', function (e) {
             mouse.x = e.pageX - this.offsetLeft;
             mouse.y = e.pageY - this.offsetTop;
-            if (mouse.left) {
+            if (e.which === 1) {
                 if (pointInRect(mouse, drawing_area_bounds))
-                    line(lastPos, mouse);
+                    line(lastPos, mouse);            
+            }
+            if (e.which === 3) {
+                if (pointInRect(mouse, drawing_area_bounds))
+                ctx.clearRect(mouse.x - eraserSize/2, mouse.y - eraserSize/2, eraserSize, eraserSize);
             }
             lastPos.x = mouse.x;
             lastPos.y = mouse.y;
@@ -92,13 +92,17 @@ function assignPageEvtListeners() {
             if (e.which === 1) {
                 mouse.left = true;
             }
-
-            console.log(e.which);
+            if (e.which === 3) {
+                mouse.right = true;
+            }
         });
 
         canvas.addEventListener('mouseup', function (e) {
             if (e.which === 1) {
                 mouse.left = false;
+            }
+            if (e.which === 3) {
+                mouse.right = true;
             }
         });
 
@@ -201,4 +205,11 @@ function line(v1, v2, width) {
     ctx.moveTo(v1.x, v1.y);
     ctx.lineTo(v2.x, v2.y);
     ctx.stroke();
+}
+
+drawCircle = function (center, radius, color) {
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = color || '#FFFFFF';
+    ctx.fill();
 }
