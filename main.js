@@ -16,7 +16,7 @@ let drawing_area_bounds;
 let points = [];
 const canvas_alpha = 1;
 const grey_hue = 255;
-const eraserSize = 5;
+const eraserSize = 10;
 
 function init() {
     nw.Screen.Init();
@@ -41,7 +41,7 @@ function init() {
 
 function drawGrid() {
     const text_height = 80;
-    const text_width = 40;
+    const text_width = 20;
 
     const start_x = (canvas.width % text_width) / 2;
     const end_x = canvas.width - start_x;
@@ -88,24 +88,6 @@ function assignPageEvtListeners() {
             lastPos.y = mouse.y;
         }, false);
     
-        canvas.addEventListener('mousedown', function (e) {
-            if (e.which === 1) {
-                mouse.left = true;
-            }
-            if (e.which === 3) {
-                mouse.right = true;
-            }
-        });
-
-        canvas.addEventListener('mouseup', function (e) {
-            if (e.which === 1) {
-                mouse.left = false;
-            }
-            if (e.which === 3) {
-                mouse.right = true;
-            }
-        });
-
         canvas.addEventListener('contextmenu', function (e) {
             e.preventDefault();
         });
